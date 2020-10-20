@@ -1,0 +1,16 @@
+@import "../../Styles/Varriables.scss";
+
+
+.cHeader{
+    width : 100%;
+    padding: 35px 16px;
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 3px 0px 3px 1px lightgrey;
+}
+
+@media screen and (min-width: 768px){
+    .cHeader{
+        padding: 30px 80px;
+    }
+}

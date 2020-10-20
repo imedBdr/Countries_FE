@@ -1,0 +1,18 @@
+@import "../../Styles/Varriables.scss";
+
+.cCard{
+    width:265px;
+    height: 335px;
+    background-color: inherit;
+    img{
+        width: inherit;
+        height:160px ;
+        margin-bottom: 30px;
+    }
+    h3{
+        margin: 0px 0px 25px 25px;
+    }
+    p{
+        margin: 0px 0px 25px 25px;
+    }
+}
