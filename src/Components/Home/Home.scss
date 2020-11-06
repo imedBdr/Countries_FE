@@ -1,0 +1,31 @@
+@import "../../Varriables.scss";
+
+.cHome{
+    padding: 40px 15px;
+    min-height: 100vh;
+    font-size: $FSHomePageItems;
+    font-family: $fontFamily;
+    .cTop{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .cBody{
+        padding: 0px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+
+    }
+}
+
+
+@media screen and (min-width:768px){
+    .cHome{
+        .cBody{
+            width:100%;
+        }
+    }
+}

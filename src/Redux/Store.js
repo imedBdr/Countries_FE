@@ -2,12 +2,11 @@ import { createStore } from "redux";
 import { HandleDarkReducer } from "./darkMode";
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage for web
-import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
-
+import autoMergeLevel1 from 'redux-persist/lib/stateReconciler/autoMergeLevel1';
 const persistConfig = {
     key: 'root',
     storage,
-    stateReconciler: hardSet
+    stateReconciler: autoMergeLevel1
   }
   
 const persistedReducer = persistReducer(persistConfig, HandleDarkReducer)

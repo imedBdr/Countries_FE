@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import {connect} from "react-redux"
 
-export default class Dropdown extends Component {
+import "./Dropdown.scss";
+
+class Dropdown extends Component {
     
     state={
         show:false
@@ -9,9 +12,8 @@ export default class Dropdown extends Component {
         super(props);
 
         this.wrapperRef = React.createRef();
-        this.setWrapperRef = this.setWrapperRef.bind(this);
-        this.handleClickOutside = this.handleClickOutside.bind(this);
     }
+    theme = true
 
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
@@ -22,31 +24,50 @@ export default class Dropdown extends Component {
     }
 
     
-    handleClickOutside(event) {
+    handleClickOutside=(event)=> {
         if (this.wrapperRef && !this.wrapperRef.current.contains(event.target)) {
-            this.setState({show:!this.state.show})
+            if(this.state.show)
+                this.setState({show:!this.state.show})
         }
     }
 
+    handleClickInside=(e)=>{
+        this.props.setCountinent(e)
+        this.setState({
+            show : false
+        })
+    }
+
     generateList=()=>{
-        const list = ["Afreca","America","Asia","Europe","Oceania"]
-        return list.map((e,i)=>(<li key={i} onClick={()=>this.props.setCountinent(e)}>{e}</li>))
+        const list = ["Africa","Americas","Asia","Europe","Oceania"]
+        return list.map((e,i)=>(<li key={i}  onClick={()=>this.handleClickInside(e)}>{e}</li>))
     }
 
     render=()=> (
         <div 
-        className={"cDropdown"}
+        className={this.props.darkMode?"cDropdown darkElement":"cDropdown lightElement"}
         ref={this.wrapperRef}>
-            <div className={"head"}>
-                filter by Region
+            <div className={"head"}
+            onClick={()=>this.setState({show:!this.state.show})}
+            >
+                {this.props.default!=="" ? this.props.default : "Filter by Region"}
                 <i 
                 className="fa fa-angle-down" 
                 aria-hidden="true">
                 </i>
             </div>
-            <ul>
+            <ul className={this.state.show?"cVisible":""}>
                 {this.generateList()}
             </ul>
         </div>
         )
 }
+
+const  mapStateToProps = (state, ownProps) => {
+    console.log(state)
+    return {...state,...ownProps}
+    
+}
+
+
+export default connect(mapStateToProps,null)(Dropdown)

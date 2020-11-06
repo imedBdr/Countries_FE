@@ -1,14 +1,38 @@
-@import "../../Styles/Varriables.scss";
+@import "../../Varriables.scss";
 
 
 .cInput{
+    width:345px;
+
+    height: 48px;
+    box-shadow: 0px 0px 3px 1px grey;
     .fa{
+        color: inherit;
         text-align: center;
         width: 75px;
         height: 48px;
     }
     input{
-        width:290px;
-    
+        display: inline-block;
+        width:270px;
+        height: 48px;
+        border:none;
+        background-color: inherit;
+        color: inherit;
+        &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: inherit;
+            opacity: 1; /* Firefox */
+          }
+          
+          &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: red;
+          }
+          
+          &::-ms-input-placeholder { /* Microsoft Edge */
+            color: red;
+          }
+          &:focus{
+              outline: none;
+          }
     }
 }

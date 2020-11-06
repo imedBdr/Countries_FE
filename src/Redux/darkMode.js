@@ -1,12 +1,12 @@
 const TOOGLE_MODE = () =>( { type : "TOOGLE_MODE" } );
 
-
-const HandleDarkReducer = ( state = false , action ) =>{
-    switch(action){
-        case TOOGLE_MODE.type :
-            return ! state;
+const HandleDarkReducer = ( state = {"darkMode":false} , action ) =>{
+    console.log(state)
+    switch(action.type){
+        case "TOOGLE_MODE":
+            return {"darkMode":!state.darkMode};
         default : 
-            break; 
+            return state;
     }
 }
 

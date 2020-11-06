@@ -1,4 +1,4 @@
-@import "../../Styles/Varriables.scss";
+@import "../../Varriables.scss";
 
 
 .cHeader{
@@ -7,6 +7,20 @@
     display: flex;
     justify-content: space-between;
     box-shadow: 3px 0px 3px 1px lightgrey;
+    font-family: $fontFamily;
+    button{
+        color: inherit;
+        background-color: inherit;
+        width: 110px;
+        border: none;
+        cursor: pointer;
+        i{
+            margin-right: 5px;
+        }
+        &:focus{
+            outline: none;
+        }
+    }
 }
 
 @media screen and (min-width: 768px){

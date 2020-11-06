@@ -1,0 +1,67 @@
+
+//  Colors
+$CdarkModeElement : hsl(209, 23%, 22%);
+$CdarkModeBackground : hsl(207, 26%, 17%);
+$ClightModeText : hsl(200, 15%, 8%);
+$ClightModeInput : hsl(0, 0%, 52%);
+$ClightModeBackground : hsl(0, 0%, 98%);
+$CdarkModeText_lightModeElements: hsl(0, 0%, 100%);
+
+// Font
+$fontFamily:'Nunito', sans-serif;
+$FSHomePageItems : 14px;
+$FSDetailPage : 16px;
+$FW1 : 300;
+$FW2 : 600;
+$FW3 : 800;
+
+
+@mixin darkModeElement {
+    background-color: $CdarkModeElement;
+    color: $CdarkModeText_lightModeElements;
+}
+@mixin lightModeElement {
+    background-color: $CdarkModeText_lightModeElements;
+    color: $ClightModeText;
+}
+
+@mixin lightModeInputElement {
+    background-color: $ClightModeInput;
+    color: $ClightModeText;
+}
+
+@mixin lightBackground {
+    background-color: $ClightModeBackground;
+    color: $ClightModeText;
+}
+
+@mixin darkBackground {
+    background-color: $CdarkModeBackground;
+    color: $ClightModeBackground;
+}
+
+
+.darkElement{
+    @include darkModeElement()
+}
+.lightElement{
+    @include lightModeElement()
+}
+.lightInputElement{
+    @include lightModeInputElement()
+}
+
+.lightBackground {
+    @include lightBackground()
+}
+.darkBackground {
+    @include darkBackground()
+}
+
+
+*{
+    
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+}

@@ -1,25 +1,40 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import { Provider } from "react-redux";
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
 import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from "react-redux";
 import { store, persistor} from "./Redux/Store";
-import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import Header from './Components/Header';
+import Home from './Components/Home';
+import Country from "./Components/Country";
+import * as serviceWorker from './serviceWorker';
+
+
+const client = new ApolloClient({
+  uri: 'https://graphql-test-country1.herokuapp.com/graphql'
+});
+
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Router>
-          <Switch>
-            <Route exact path={"/"}>
-              <App/>
-            </Route>
-          </Switch>
-        </Router>
-      </PersistGate>
-    </Provider>
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Header/>
+          <Router>
+            <Switch>
+              <Route exact path={"/"}>
+                  <Home/>
+              </Route>
+              <Route path={"/country/:name"}>
+                <Country/>
+              </Route>
+            </Switch>
+          </Router>
+        </PersistGate>
+      </Provider>
+    </ApolloProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
