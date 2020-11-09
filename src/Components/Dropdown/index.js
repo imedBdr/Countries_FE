@@ -13,7 +13,7 @@ class Dropdown extends Component {
 
         this.wrapperRef = React.createRef();
     }
-    theme = true
+
 
     componentDidMount() {
         document.addEventListener('mousedown', this.handleClickOutside);
@@ -64,7 +64,6 @@ class Dropdown extends Component {
 }
 
 const  mapStateToProps = (state, ownProps) => {
-    console.log(state)
     return {...state,...ownProps}
     
 }

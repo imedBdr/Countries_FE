@@ -1,15 +1,14 @@
-import React, { Component, Fragment } from 'react';
+import React, { useState } from 'react';
 import {connect} from "react-redux";
-import gql from "graphql-tag";
-import { Query } from 'react-apollo';
+import { gql, useQuery } from '@apollo/client';
 import DropDown from "../Dropdown";
 import Input from "../Input";
 import Card from "../Card";
 
 import "./Home.scss";
 
-class Home extends Component {
-    QueryList = [gql`
+ const Home = (props) => {
+   const QueryList = [gql`
     query RootQuerry{ 
         countries{
         name
@@ -25,87 +24,78 @@ class Home extends Component {
             region
             capital
             flag
-        }}`,gql`query RootQuerry($name:String){ 
-            countriesByRegion(name: $name){
-                name
-                population
-                region
-                capital
-                flag
-            }}`
+        }}`,
+    gql`query RootQuerry($name:String){ 
+        countriesByRegion(name: $name){
+            name
+            population
+            region
+            capital
+            flag
+        }}`
 ]
-    state = {
-        region:"",
-        search:"",
-        cQuery:0
-     }
+    const [region ,setRegion] = useState("");
+    const [search ,setSearch] = useState("");
+    const [cQuery ,setCQuery] = useState(0);
 
-    componentDidUpdate=(prevProps,prevState)=>{
 
+   const handleSetCountinent=(text)=>{
+        setRegion(text)
+        setCQuery(2)
+        setSearch("")  
     }
 
-    handleSetCountinent=(text)=>{
-        this.setState({
-            region:text,
-            cQuery:2,
-            search:""
-        })
-    }
-
-    handleSearch=(text)=>{
-        
+    const handleSearch=(text)=>{
         if(text===""){
-            this.setState({
-                search : "",
-                region:"",
-                cQuery : 0
-            })
+            setRegion("")
+            setCQuery(0)
+            setSearch("") 
         }
         else{
-            this.setState({
-                search : text,
-                region:"",
-                cQuery : 1
-            })
+            setRegion("")
+            setCQuery(1)
+            setSearch(text) 
         }
     }
-
-    render() {
-        const { cQuery,search,region } = this.state
-        return ( 
-            <div className={this.props.darkMode? "cHome darkBackground":"cHome lightBackground"}>
+    const { loading, error, data } = useQuery(QueryList[cQuery],{variables:{name:cQuery==1? search : region }})
+    
+        if (loading) return <div className={props.darkMode? "cHome darkBackground":"cHome lightBackground"}>
                     <div className={"cTop"}>
-                        <Input handleSearch={this.handleSearch} cValue={this.state.search}/>
-                        <DropDown default={region} setCountinent={this.handleSetCountinent}/>
+                        <Input handleSearch={handleSearch} cValue={search}/>
+                        <DropDown default={region} setCountinent={handleSetCountinent}/>
+                    </div><h4>Loading...</h4>
+                </div>;
+        if (error) {
+            console.log(JSON.stringify(error, null, 3))
+            return <div className={props.darkMode? "cHome darkBackground":"cHome lightBackground"}>
+                        <div className={"cTop"}>
+                            <Input handleSearch={handleSearch} cValue={search}/>
+                            <DropDown default={region} setCountinent={handleSetCountinent}/>
+                        </div><h4>Error...</h4>
+                    </div>;
+        }
+        else{
+            let CountryList=[]
+            if(data.countries)
+                CountryList = data.countries 
+            else if(data.countriesSearch) 
+                CountryList = data.countriesSearch
+            else CountryList = data.countriesByRegion
+            return (
+                <div className={props.darkMode? "cHome darkBackground":"cHome lightBackground"}>
+                    <div className={"cTop"}>
+                        <Input handleSearch={handleSearch} cValue={search}/>
+                        <DropDown default={region} setCountinent={handleSetCountinent}/>
                     </div>
-            <Query query={this.QueryList[cQuery]} variables={{"name":cQuery===2?region:search}}>
-            {({ loading, error, data }) => {
-              if (loading) return <h4>Loading...</h4>;
-              if (error) {
-                  console.log(JSON.stringify(error, null, 2))
-                    return <Fragment></Fragment>
-                }
-                else{
-                    let CountryList=[]
-                    if(data.countries)
-                        CountryList = data.countries 
-                        else if(data.countriesSearch) 
-                            CountryList = data.countriesSearch
-                        else CountryList = data.countriesByRegion
-              return (
                     <div className={"cBody"}>
-                        {CountryList.map(e=>(
+                        {CountryList.lenght === 0 ? "" : CountryList.map(e=>(
                             <Card capital={e.capital} flag={e.flag} population={e.population} name={e.name} region={e.region} />
                         ))}
                     </div>
-                
-              )
-    }}}
-
-              </Query>
-              </div> 
-        );
-    }
+                </div> 
+        
+            )
+        }
 }
  
 const  mapStateToProps = (state, ownProps) => {

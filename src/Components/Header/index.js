@@ -9,7 +9,7 @@ const Header = (props) =>(
         <h3>Where in the world?</h3>
         <button 
             className={"cDarkMode"} 
-            onClick={props.handleDarkMode}>
+            onClick={()=>props.handleDarkMode()}>
             <i className="fa fa-moon-o" aria-hidden="true"></i>
             Dark Mode
         </button>

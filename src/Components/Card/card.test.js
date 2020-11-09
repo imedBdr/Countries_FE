@@ -1,5 +1,5 @@
 import React from 'react';
-import { mount} from "enzyme";
+import { mount } from "enzyme";
 import configureStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from 'react-router-dom';
@@ -13,6 +13,7 @@ describe('Card Test', () =>{
     const mockStore = configureStore()
     const props ={"darkMode" :false , "name" :"Algeria", "flag":"none", "population":40000000, "region":"Africa", "capital":"Algers"}
     let store,container
+
 
     beforeEach(()=>{
         store = mockStore(initialState)

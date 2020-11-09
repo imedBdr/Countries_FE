@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from 'react-apollo';
+import { ApolloProvider } from '@apollo/client';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from "react-redux";
 import { store, persistor} from "./Redux/Store";
@@ -13,7 +13,8 @@ import * as serviceWorker from './serviceWorker';
 
 
 const client = new ApolloClient({
-  uri: 'https://graphql-test-country1.herokuapp.com/graphql'
+  uri: 'https://graphql-test-country1.herokuapp.com/graphql',
+  cache: new InMemoryCache()
 });
 
 ReactDOM.render(

@@ -1,12 +1,10 @@
 import React from "react";
-import { mount } from "enzyme";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { BrowserRouter } from "react-router-dom";
 import { MockedProvider } from '@apollo/client/testing';
 import renderer from "react-test-renderer";
-//import wait from "waait";
-import gql  from "graphql-tag";
+import { gql }  from '@apollo/client';
 import Country from "./index";
 
 
@@ -42,8 +40,9 @@ const result = {
     ]
   }
 
-  const GET_CAT_QUERY = gql`{
-      country(name:"Algeria"){
+  const GET_CRY_QUERY = gql`
+    query RootQuerry($name: String) {
+      country(name:$name){
         name
         flag
         nativeName
@@ -59,22 +58,78 @@ const result = {
             code
         }
         borders
-    }
+      }
+    
 }`
 
-  const mocks = [
+  const GqlMock = [
     {
-      request: { query: GET_CAT_QUERY },
-      result: {
-        data: {
-          cat: {
-            __typename: 'Cat',
-            id: '123',
-            name: 'Cat 123',
-          },
-        },
+      request: { query: GET_CRY_QUERY },
+      variables: {
+        name: 'Algeria',
       },
-    },
+      result: {
+        "data": {
+          "country": {
+            "name": "Algeria",
+            "flag": "https://restcountries.eu/data/dza.svg",
+            "nativeName": "الجزائر",
+            "subregion": "Northern Africa",
+            "population": "40400000",
+            "region": "Africa",
+            "capital": "Algiers",
+            "topLevelDomain": [
+              ".dz"
+            ],
+            "languages": [
+              {
+                "name": "Arabic"
+              }
+            ],
+            "currencies": [
+              {
+                "code": "DZD"
+              }
+            ],
+            "borders": [
+              "Tunisia",
+              "Libya",
+              "Niger",
+              "Western Sahara",
+              "Mauritania",
+              "Mali",
+              "Morocco"
+            ]
+          }
+        }
+      }
+      },
+  ];
+
+  const emptyGqlMock = [
+    {
+      request: { query: GET_CRY_QUERY },
+      variables: {
+        name: 'Algeria',
+      },
+      result: {
+        "data": {
+          "country": {
+            "name": "",
+            "flag": "",
+            "nativeName": "",
+            "subregion": "",
+            "population": "",
+            "region": "",
+            "capital": "",
+            "topLevelDomain": [],
+            "languages": [],
+            "currencies": [],
+            "borders": []
+          }
+        }
+      }
+      },
   ];
 
 const initialState = {darkMode:false}
@@ -88,50 +143,13 @@ const props =
     }
 
 
-/*
+
 describe("Test Country component " , ()=>{
 
-    beforeEach(()=>{
-        
-        store = mockStore(initialState)
-        container = mount(<MockedProvider mocks={mocks}>
-                <Provider store ={store}>
-                    <BrowserRouter>
-                        <Country { ...props}></Country>
-                    </BrowserRouter>
-                </Provider>
-            </MockedProvider>
-        ) 
-    })
-
-    it("test of country comonent with given props", ()=>{
-
-        /*
-        const nativeName = container.find(".info1 ul li").at(0).text()
-        const population = container.find(".info1 ul li").at(1).text()
-        const region = container.find(".info1 ul li").at(2).text()
-        const subregion =container.find(".info1 ul li").at(3).text()
-        const capital = container.find(".info1 ul li").at(4).text()
-        const topLevelDomain = container.find(".info2 ul li").at(0).text()
-        const currencies = container.find(".info2 ul li").at(1).text()
-        const languages = container.find(".info2 ul li").at(2).text()
-        const borders = container.find()// *ù/
-                setTimeout(()=>{
-                    const name = container.find("h2")
-                    console.log(name)
-                    const flag = container.find(".flag img").prop("src")
-            expect(name).toBe(result.name)
-            //expect(flag).toBe(result.flag)
-        },2000)
-    })
-})
-
-*/
-
-
-it('renders without error', () => {
-    renderer.create(
-      <MockedProvider mocks={mocks} addTypename={false}>
+  it("test of country comonent with given props",  async() =>{
+    store = mockStore(initialState)
+    container = renderer.create(
+      <MockedProvider mocks={GqlMock} addTypename={false}>
         <Provider store ={store}>
                     <BrowserRouter>
                         <Country { ...props}></Country>
@@ -139,4 +157,57 @@ it('renders without error', () => {
                 </Provider>
       </MockedProvider>,
     );
-  });
+    await new Promise(resolve => setTimeout(resolve, 0));
+
+    const nativeName = container.root.findAllByType("li")[0].children[1]
+    const population = container.root.findAllByType("li")[1].children[1]
+    const region = container.root.findAllByType("li")[2].children[1]
+    const subregion = container.root.findAllByType("li")[3].children[1]
+    const capital = container.root.findAllByType("li")[4].children[1]
+    const topLevelDomain = container.root.findAllByType("li")[5].children[1]
+    const currencies = container.root.findAllByType("li")[6].children[1]
+    const languages = container.root.findAllByType("li")[7].children[1]
+    
+    expect(nativeName).toBe(result.nativeName)
+    expect(population).toBe(result.population)
+    expect(region).toBe(result.region)
+    expect(subregion).toBe(result.subregion)
+    expect(capital).toBe(result.capital)
+    expect(topLevelDomain).toBe(result.topLevelDomain.map(e=>e).join(", "))
+    expect(currencies).toBe(result.currencies.map(e=>(e.code)).join(", "))
+    expect(languages).toBe(result.languages.map(e=>e.name).join(", "))
+  })
+
+  it("test of country comonent with given props",  async() =>{
+  store = mockStore(initialState)
+  container = renderer.create(
+    <MockedProvider mocks={emptyGqlMock} addTypename={false}>
+      <Provider store ={store}>
+                  <BrowserRouter>
+                      <Country { ...props}></Country>
+                  </BrowserRouter>
+              </Provider>
+    </MockedProvider>,
+  );
+  await new Promise(resolve => setTimeout(resolve, 0));
+
+  const nativeName = container.root.findAllByType("li")[0].children[1]
+  const population = container.root.findAllByType("li")[1].children[1]
+  const region = container.root.findAllByType("li")[2].children[1]
+  const subregion = container.root.findAllByType("li")[3].children[1]
+  const capital = container.root.findAllByType("li")[4].children[1]
+  const topLevelDomain = container.root.findAllByType("li")[5].children[1]
+  const currencies = container.root.findAllByType("li")[6].children[1]
+  const languages = container.root.findAllByType("li")[7].children[1]
+  
+  expect(nativeName).toBe("")
+  expect(population).toBe("")
+  expect(region).toBe("")
+  expect(subregion).toBe("")
+  expect(capital).toBe("")
+  expect(topLevelDomain).toBe("")
+  expect(currencies).toBe("")
+  expect(languages).toBe("")
+})
+
+})
