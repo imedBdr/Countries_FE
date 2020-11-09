@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {Link} from "react-router-dom";
 
-import "./Card.scss";
+import "./card.scss";
 
 const Card = (props) =>{
     const {
