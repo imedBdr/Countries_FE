@@ -4,6 +4,7 @@ import { withRouter ,Link, useHistory, useParams } from 'react-router-dom';
 import { useQuery, gql } from '@apollo/client';
 
 import "./Country.scss";
+import { Helmet } from 'react-helmet';
 
 const GET_BY_COUNTRY = gql `
     query RootQuerry($name:String){
@@ -65,6 +66,9 @@ const Country = (props) => {
                 const currencies =  data.country.currencies.length===0 ? "" : data.country.currencies.map(e=>(e.code)).join(", ")
                 return(
                     <div className={"cCountry "+background}>
+                        <Helmet>
+                        <title>{ name } details</title>
+                        </Helmet>
                 <button className={element} onClick={handleRedirectToHome}>
                     <i className={"fa fa-long-arrow-left"} aria-hidden="true"></i>
                     Back
